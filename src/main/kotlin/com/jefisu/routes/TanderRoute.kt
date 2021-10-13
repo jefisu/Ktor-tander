@@ -17,20 +17,18 @@ val members = listOf(
     Member(6,"Sara", "Sara-chan", "$BASE_URL/members/sara.jpg",TanderConstants.description_member6)
 )
 
-fun Route.getMember() {
-    route("/getmember") {
-        get {
-            call.respond(
-                status = HttpStatusCode.OK,
-                members
-            )
-        }
-        get("/{id}") {
-            val id = call.parameters["id"] ?: return@get call.respondText("Bad request", status = HttpStatusCode.BadRequest)
-            val member = members.find {
-                it.id == id.toInt()
-            } ?: return@get call.respondText("No member with id $id", status = HttpStatusCode.NotFound)
-            call.respond(member)
-        }
+fun Route.getMembers() {
+    get("/members") {
+        call.respond(
+            status = HttpStatusCode.OK,
+            members
+        )
+    }
+    get("/member/{id}") {
+        val id = call.parameters["id"]
+        val member = members.find {
+            it.id == id?.toInt()
+        } ?: return@get call.respondText("No member with id $id", status = HttpStatusCode.NotFound)
+        call.respond(member)
     }
 }
